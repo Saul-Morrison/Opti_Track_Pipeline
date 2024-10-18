@@ -8,6 +8,6 @@ data = np.loadtxt(gameSaveLocation, delimiter=',',skiprows=7)
 simulatedDF = pd.DataFrame(data)
 
 
-streamer = DataStreamer(SharedMemoryName='MotiveDump', dataType='Bone', noDataTypes=51)
+streamer = DataStreamer(SharedMemoryName='Motive Dump', dataType='Bone Marker', noDataTypes=41)
 streamer.SimulateLiveData(simulatedDF, timeout = 20.000)
 print(streamer.shared_block)

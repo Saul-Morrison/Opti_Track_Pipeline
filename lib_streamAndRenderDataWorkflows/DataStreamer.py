@@ -64,7 +64,7 @@ class DataStreamer:
         if preprocessedSharedArray:
             rowData =np.array(simulatedDF.iloc[frame,:][0:self.varsPerDataType*self.noDataTypes])
         else:
-            rowData = simulatedDF.iloc[frame,:][2:2+self.varsPerDataType*self.noDataTypes].reset_index(drop=True)
+            rowData = simulatedDF.iloc[frame,:][357+2:2+357+self.varsPerDataType*self.noDataTypes].reset_index(drop=True)
         lengthRowData = rowData.shape[0]
         noTypes,noDims = self.sharedArray.shape
         if preprocessedSharedArray: 
