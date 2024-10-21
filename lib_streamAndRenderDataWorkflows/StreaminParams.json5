@@ -1,0 +1,7 @@
+//Parameter file to be kept in same folder and used with DataStreamer.py
+
+//Simulated live data parameters for dumping saved data into shared memory
+{
+    "SimHeaderRows": 7,
+    "SimExtraColumns":  2,
+}

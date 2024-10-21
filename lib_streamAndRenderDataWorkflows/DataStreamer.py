@@ -14,7 +14,7 @@ import time
 
 class DataStreamer:
 
-    def __init__(self, SharedMemoryName = 'motive dump', dataType = 'Bone', noDataTypes = 3):
+    def __init__(self, SharedMemoryName = 'motive dump', dataType = 'Bone Marker', noDataTypes = 3):
         """
         Class to stream data and dump into a shared memory
         @PARAM: SharedMemoryName - Name of the shared memory
@@ -26,12 +26,13 @@ class DataStreamer:
         self.noDataTypes = noDataTypes
         self.shared_block, self.sharedArray = self.defineSharedMemory()
 
-    def SimulateLiveData(self, simulatedDF, timeout = 20.000):
+    def SimulateLiveData(self, gameSavelocation, timeout = 20.000):
         """
         Function to simulate live data from a given csv file
         @PARAM: timeout - How long to run the simulation for
         @PARAM: simulatedDF - Dataframe containing each frame with index, time stamp and associated values
         """
+        simulatedDF = self.ProcessDataFrame(gameSavelocation)
         is_looping = True
         t_start = time.time()
 
@@ -49,8 +50,23 @@ class DataStreamer:
                 time.sleep(0.008) # change this later
                 if i%100 == 0:
                     print("Dumped Frame {} into shared memory".format(i))
-                    print(self.sharedArray)
 
+    def ProcessDataFrame(self, gameSaveLocation):
+        """
+        Function to remove columns containing unnecessary information about the wrong dataType.
+        @PARAM: SaveGameLocation - Path to stored csv
+        """
+        data_info = pd.read_csv(gameSaveLocation, nrows=1)
+        headers_df = np.loadtxt(gameSaveLocation, delimiter=',', skiprows=1,max_rows=5, dtype=str)
+        headers_df = pd.DataFrame(headers_df)
+        simulatedDF = pd.read_csv(gameSaveLocation, delimiter=',',skiprows=7)
+
+        columns_to_delete = []
+        for i in range(simulatedDF.shape[1]):
+            if headers_df.iloc[0, i] != self.dataType:
+                columns_to_delete.append(i)
+        simulatedDF.drop(simulatedDF.columns[columns_to_delete], axis=1, inplace=True)
+        return simulatedDF
 
     def SimulateRowSharedMemoryDump(self, simulatedDF, preprocessedSharedArray = False, frame = 0,):
         """
@@ -60,11 +76,7 @@ class DataStreamer:
         @PARAM: preprocessedSharedArray - Change to True if Dataframe does not have index and time stamp for each frame
         @PARAM: frame - Current frame being dumped into shared memory
         """
-
-        if preprocessedSharedArray:
-            rowData =np.array(simulatedDF.iloc[frame,:][0:self.varsPerDataType*self.noDataTypes])
-        else:
-            rowData = simulatedDF.iloc[frame,:][357+2:2+357+self.varsPerDataType*self.noDataTypes].reset_index(drop=True)
+        rowData = simulatedDF.iloc[frame,:].reset_index(drop=True)
         lengthRowData = rowData.shape[0]
         noTypes,noDims = self.sharedArray.shape
         if preprocessedSharedArray: 
@@ -95,7 +107,6 @@ class DataStreamer:
                 self.varsPerDataType = 7 # 4 rotations and 3 positions
             dataEntries = self.varsPerDataType * self.noDataTypes # calculate how many data entries needed for each timestamp
 
-            SHARED_MEM_NAME = self.SharedMemName
             try:
                 shared_block = shared_memory.SharedMemory(size= dataEntries * 8, name=self.SharedMemName, create=True)
             except FileExistsError:

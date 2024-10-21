@@ -4,10 +4,7 @@ import pandas as pd
 import time
 
 gameSaveLocation = "test_lib_streamAndRenderDataWorkflows\charlie_suit_and_wand_demo.csv"
-data = np.loadtxt(gameSaveLocation, delimiter=',',skiprows=7)
-simulatedDF = pd.DataFrame(data)
+streamer = DataStreamer(SharedMemoryName='Motive Dump', dataType='Bone', noDataTypes=51)
 
-
-streamer = DataStreamer(SharedMemoryName='Motive Dump', dataType='Bone Marker', noDataTypes=41)
-streamer.SimulateLiveData(simulatedDF, timeout = 20.000)
-print(streamer.shared_block)
+if __name__ == "__main__":
+    streamer.SimulateLiveData(gameSaveLocation, timeout = 20.000)
