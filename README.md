@@ -2,3 +2,11 @@
 This is the repository where programs used to stream and present data from the optitrack are stored. I will aim to have this working correctly by the end of week 3.
 
 Much of this work will be taken from the work of Ashwin's project and Charlie's Demos.
+
+#--------------------------------TODO--------------------------------------
+
+Make it so that program automatically updates varsperdatatype and nodatatypes based on data coming in and datatypes
+
+Complete Streaming
+
+

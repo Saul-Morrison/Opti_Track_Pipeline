@@ -60,7 +60,6 @@ class DataStreamer:
         headers_df = np.loadtxt(gameSaveLocation, delimiter=',', skiprows=1,max_rows=5, dtype=str)
         headers_df = pd.DataFrame(headers_df)
         simulatedDF = pd.read_csv(gameSaveLocation, delimiter=',',skiprows=7)
-
         columns_to_delete = []
         for i in range(simulatedDF.shape[1]):
             if headers_df.iloc[0, i] != self.dataType:
@@ -101,9 +100,9 @@ class DataStreamer:
         if simulate:
 
             self.varsPerDataType = None
-            if self.dataType == "Bone Marker":
+            if 'Marker' in self.dataType:
                 self.varsPerDataType = 3 # doesn't have rotations, only x,y,z
-            elif self.dataType == "Bone":
+            else:
                 self.varsPerDataType = 7 # 4 rotations and 3 positions
             dataEntries = self.varsPerDataType * self.noDataTypes # calculate how many data entries needed for each timestamp
 
