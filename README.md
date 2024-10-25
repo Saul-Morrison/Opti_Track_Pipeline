@@ -5,8 +5,18 @@ Much of this work will be taken from the work of Ashwin's project and Charlie's 
 
 #--------------------------------TODO--------------------------------------
 
-Make it so that program automatically updates varsperdatatype and nodatatypes based on data coming in and datatypes
-
 Complete Streaming
 
+Cleanup SimulateLiveData 
 
+Integrate MocapData classes into Visualiser and Other end of shared memory
+
+Fix Visualiser
+
+Fix issues with singular rigid body
+
+\----------------------------------ASKCHARLIE-----------------------
+
+Quartonions and different datatypes?
+
+Ashwin originally added quaternions to offsets

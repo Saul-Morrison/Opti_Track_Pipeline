@@ -11,10 +11,11 @@ import numpy as np
 from multiprocessing import shared_memory
 import atexit
 import time
+import lib_streamAndRenderDataWorkflows.Client.PythonSample as PythonSample
 
 class DataStreamer:
 
-    def __init__(self, SharedMemoryName = 'motive dump', dataType = 'Bone Marker', noDataTypes = 3):
+    def __init__(self, SharedMemoryName = 'motive dump', dataType = 'Bone Marker', noDataTypes = 3,clientAddress = "192.168.0.128", serverAddress = "192.168.0.14" ):
         """
         Class to stream data and dump into a shared memory
         @PARAM: SharedMemoryName - Name of the shared memory
@@ -25,6 +26,13 @@ class DataStreamer:
         self.dataType = dataType
         self.noDataTypes = noDataTypes
         self.shared_block, self.sharedArray = self.defineSharedMemory()
+        global bodyType_
+        bodyType_ = None
+        self.clientAddress = clientAddress
+        self.serverAddress = serverAddress
+
+    def FetchLiveData(self):
+        PythonSample.fetchMotiveData(clientAddress = "192.168.0.128", serverAddress = "192.168.0.14", shared_array_pass=self.sharedArray, shared_block_pass=self.shared_block)
 
     def SimulateLiveData(self, gameSavelocation, timeout = 20.000):
         """
@@ -115,15 +123,17 @@ class DataStreamer:
                     shared_block = shared_memory.SharedMemory(size= dataEntries * 8, name=self.SharedMemName, create=False)
                 else:
                     raise Exception(FileExistsError)
-            shared_array = np.ndarray(shape=(self.noDataTypes,self.varsPerDataType), dtype=np.float64, buffer=shared_block.buf)
+            if self.noDataTypes == 1:
+                shared_array = np.ndarray(shape=(self.varsPerDataType), dtype=np.float64, buffer=shared_block.buf)
+            else:
+                shared_array = np.ndarray(shape=(self.noDataTypes,self.varsPerDataType), dtype=np.float64, buffer=shared_block.buf)
 
         else:
             pass
         return shared_block,shared_array
         
 
-    def dumpFrameDataIntoSharedMemory(self, simulate = False,simulatedDF = None,frame = 0,sharedMemArray = None,mocapData = None,quaternionsUnit = None,preprocessedSharedArray = False):
-        
+    def dumpFrameDataIntoSharedMemory(simulate = False,simulatedDF = None,frame = 0,sharedMemArray = None,mocapData = None,quaternionsUnit = None,preprocessedSharedArray = False):
         # first extract labeled_markers
         global bodyType_
         if bodyType_ == None:

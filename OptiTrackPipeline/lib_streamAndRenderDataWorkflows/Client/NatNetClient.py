@@ -1316,13 +1316,13 @@ class NatNetClient:
             trace( "Packet Size : ", packet_size )
             #start = time.perf_counter()
             try:
-                from lib_streamAndRenderDataWorkflows.streamData import dumpFrameDataIntoSharedMemory
+                from lib_streamAndRenderDataWorkflows.DataStreamer import DataStreamer
             except:
                 pass
 
             offset_tmp, mocap_data = self.__unpack_mocap_data( data[offset:], packet_size, major, minor )
             # place mocap_data into shared memory here
-            dumpFrameDataIntoSharedMemory(simulate=False,sharedMemArray=self.shared_array,mocapData=mocap_data,quaternionsUnit=quaternionsUnit)
+            DataStreamer.dumpFrameDataIntoSharedMemory(simulate=False,sharedMemArray=self.shared_array,mocapData=mocap_data,quaternionsUnit=quaternionsUnit)
             offset += offset_tmp
             #print(self.shared_array)
             #print("MoCap Frame: %d\n"%(mocap_data.prefix_data.frame_number))
