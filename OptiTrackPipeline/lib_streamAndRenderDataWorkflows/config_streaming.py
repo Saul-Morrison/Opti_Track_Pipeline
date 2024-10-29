@@ -1,16 +1,27 @@
 
-"""Contains all variables necessary to stream data
+"""
+Contains all variables necessary to Stream and Handle Data
+To be kept in same folder as DataStreamer.py and DataHandler.py
 """
 
+#Paths to CSVs:
+RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/RecordingTest'
+
+#Arrays of datatypes and number of data types to be streamed and handled
+DataTypesArray = ['Bone', 'Rigid Body']
+
+NumDataTypesArray = [51, 1]
 
 # list of rigid body parts 
-rigidBodyParts = ['Pelvis', 'Ab', 'Chest', 'Neck', 'Head', 'LShoulder', 'LUArm', 
+BodyPartsIDs = ['Pelvis', 'Ab', 'Chest', 'Neck', 'Head', 'LShoulder', 'LUArm', 
                       'LFArm', 'LHand', 'LThumb1', 'LThumb2', 'LThumb3', 'LIndex1', 'LIndex2', 
                       'LIndex3', 'LMiddle1', 'LMiddle2', 'LMiddle3', 'LRing1', 'LRing2', 'LRing3', 
                       'LPinky1', 'LPinky2', 'LPinky3', 'RShoulder', 'RUArm', 'RFArm', 'RHand', 'RThumb1', 
                       'RThumb2', 'RThumb3', 'RIndex1', 'RIndex2', 'RIndex3', 'RMiddle1', 'RMiddle2', 'RMiddle3', 
                       'RRing1', 'RRing2', 'RRing3', 'RPinky1', 'RPinky2', 'RPinky3', 'LThigh', 'LShin', 
                       'LFoot', 'LToe', 'RThigh', 'RShin', 'RFoot', 'RToe']
+
+RigidBodyIDs = ['BalancingPole']
 
 bodyParts = ['Pelvis', 'Ab', 'Chest', 'Neck', 'Head', 'LShoulder', 'LUArm', 
                       'LFArm', 'LHand', 'RShoulder', 'RUArm', 'RFArm', 'RHand',  'LThigh', 'LShin', 
