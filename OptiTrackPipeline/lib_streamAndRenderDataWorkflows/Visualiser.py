@@ -117,7 +117,7 @@ class Visualiser:
 
             self.Data.UpdateMocapData()
             if record == True:
-                self.Data.RecordLineToCSV(run_time)
+                self.Data.RecordLineToCSV(run_time,num)
             offsets, quaternions = self.GetOffSetsAndQuarts(self.VisibleVectors)
             
             frequency = num / run_time.total_seconds()

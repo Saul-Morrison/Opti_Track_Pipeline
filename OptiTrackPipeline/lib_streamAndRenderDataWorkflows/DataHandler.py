@@ -135,10 +135,10 @@ class DataHandler:
         return info
         
     def MakeHeaders(self):
-        DataTypeHeader = ['type']
-        IDHeader = ['ID']
-        InfoTypeHeader = ['']
-        XYZHeader = ['time']
+        DataTypeHeader = ['','type']
+        IDHeader = ['','ID']
+        InfoTypeHeader = ['','']
+        XYZHeader = ['frame','time']
         SkeletonCounter=0
         RigidBodyCounter=0
         SkeletonMarkerSetCounter = 0
@@ -183,10 +183,11 @@ class DataHandler:
             writer = csv.writer(file)
             writer.writerows(fullheader)
     
-    def RecordLineToCSV(self, run_time):
+    def RecordLineToCSV(self, run_time, num):
         info = self.MakeInfoHeader()
         with open(self.pathtorecord, mode='a', newline='') as file:
             writer = csv.writer(file)
             csv_list = self.shared_array.flatten().tolist()
             csv_list.insert(0,run_time)
+            csv_list.insert(0, num)
             writer.writerows([csv_list])

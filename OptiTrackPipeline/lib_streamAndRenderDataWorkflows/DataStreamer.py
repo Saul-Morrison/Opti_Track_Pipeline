@@ -86,13 +86,13 @@ class DataStreamer:
         Function to remove columns containing unnecessary information about the wrong dataType.
         @PARAM: SaveGameLocation - Path to stored csv
         """
-        data_info = pd.read_csv(gameSaveLocation, nrows=1)
-        headers_df = np.loadtxt(gameSaveLocation, delimiter=',', skiprows=1,max_rows=5, dtype=str)
+        # data_info = pd.read_csv(gameSaveLocation, nrows=1)
+        headers_df = np.loadtxt(gameSaveLocation, delimiter=',', max_rows=5, dtype=str)
         headers_df = pd.DataFrame(headers_df)
-        simulatedDF = pd.read_csv(gameSaveLocation, delimiter=',',skiprows=7)
+        simulatedDF = pd.read_csv(gameSaveLocation, delimiter=',',skiprows=5)
         columns_to_delete = []
         for i in range(simulatedDF.shape[1]):
-            if headers_df.iloc[1, i] not in self.DataTypesArray:
+            if headers_df.iloc[0, i] not in self.DataTypesArray:
                 columns_to_delete.append(i)
         simulatedDF.drop(simulatedDF.columns[columns_to_delete], axis=1, inplace=True)
         return simulatedDF
