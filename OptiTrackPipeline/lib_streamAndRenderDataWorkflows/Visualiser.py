@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import copy
+import time
 import numpy as np
 from datetime import datetime
 from pyquaternion import quaternion
@@ -9,6 +10,7 @@ import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.widgets import CheckButtons as cb
 from pyquaternion import Quaternion
+
 
 class Visualiser:
     def __init__(self, DataHandler):
@@ -67,7 +69,6 @@ class Visualiser:
             quaternion = Quaternion(quaternions[i])
             rotated_vector = quaternion.rotate(vectors[i])
             rotated_vectors = np.vstack((rotated_vectors, rotated_vector))
-        print(np.array(rotated_vectors).shape)
         return np.array(rotated_vectors)
 
     def visualiseVectorsFrom3DarrayAnimation(self, RelativeView=False, record=False):
@@ -113,20 +114,18 @@ class Visualiser:
 
         def update_graph(num):
 
-            run_time = -1* (start_time - datetime.now())
+            frame_start = time.perf_counter()
 
             self.Data.UpdateMocapData()
-            if record == True:
-                self.Data.RecordLineToCSV(run_time,num)
             offsets, quaternions = self.GetOffSetsAndQuarts(self.VisibleVectors)
             
-            frequency = num / run_time.total_seconds()
-            title.set_text('Plotting markers, time={}\nFrame Frequency = {}'.format(num, frequency))
 
 
             self.quiver.remove()
             self.quiver = ax.quiver(*get_arrows(offsets=offsets, quaternions=quaternions, ref_vectors=reference_vectors), length=50, normalize=True)
-
+            frame_end = time.perf_counter()
+            title.set_text(f'Plotting markers, time={num}\nFrame Frequency = {1/(frame_end-frame_start):.2f}')
+           
 
 
         # set up the figure
