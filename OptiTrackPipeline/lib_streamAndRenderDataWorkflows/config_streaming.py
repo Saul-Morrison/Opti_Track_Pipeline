@@ -5,12 +5,14 @@ To be kept in same folder as DataStreamer.py and DataHandler.py
 """
 
 #Paths to CSVs:
-RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/RecordingTest'
+RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/LiveDemo'
 
 #Arrays of datatypes and number of data types to be streamed and handled
-DataTypesArray = ['Bone', 'Rigid Body']
+DataTypesArray = ['Rigid Body', 'Bone']
 
-NumDataTypesArray = [51, 1]
+NumDataTypesArray = [1,51]
+
+ValidRigidBodyNumbers = [325]
 
 # list of rigid body parts 
 BodyPartsIDs = ['Pelvis', 'Ab', 'Chest', 'Neck', 'Head', 'LShoulder', 'LUArm', 

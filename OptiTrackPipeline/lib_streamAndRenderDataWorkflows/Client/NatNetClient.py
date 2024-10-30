@@ -359,7 +359,8 @@ class NatNetClient:
         rigid_body = MoCapData.RigidBody(new_id, pos, rot)
 
         if self.rigid_body_listener is not None:
-            self.rigid_body_listener( rigid_body, self.shared_array)
+            self.rigid_body_listener( rigid_body, self.shared_array, self.sa_counter)
+            self.sa_counter += 1
 
         # RB Marker Data ( Before version 3.0.  After Version 3.0 Marker data is in description )
         if( major < 3  and major != 0) :
@@ -530,7 +531,6 @@ class NatNetClient:
                 rel_offset, skeleton = self.__unpack_skeleton( data[offset:], major, minor )
                 offset += rel_offset
                 skeleton_data.add_skeleton(skeleton)
-                #print(skeleton_data.get_as_string())
 
         return offset, skeleton_data
 
@@ -738,6 +738,7 @@ class NatNetClient:
 
     # Unpack data from a motion capture frame message
     def __unpack_mocap_data( self, data : bytes, packet_size, major, minor):
+        self.sa_counter = 0
         mocap_data = MoCapData.MoCapData()
         trace_mf( "MoCap Frame Begin\n-----------------" )
         data = memoryview( data )
@@ -763,14 +764,17 @@ class NatNetClient:
         mocap_data.set_rigid_body_data(rigid_body_data)
         rigid_body_count = rigid_body_data.get_rigid_body_count()
 
-        
-
 
         # Skeleton Data
         rel_offset, skeleton_data = self.__unpack_skeleton_data(data[offset:], (packet_size - offset),major, minor)
         offset += rel_offset
         mocap_data.set_skeleton_data(skeleton_data)
         skeleton_count = skeleton_data.get_skeleton_count()
+
+        #bone data
+        bone_count = 0
+        for skeleton in skeleton_data.skeleton_list:
+            bone_count += len(skeleton.rigid_body_list)
 
         # Labeled Marker Data
         rel_offset, labeled_marker_data = self.__unpack_labeled_marker_data(data[offset:], (packet_size - offset),major, minor)
@@ -811,6 +815,7 @@ class NatNetClient:
             data_dict[ "unlabeled_markers_count"] = unlabeled_markers_count
             data_dict[ "rigid_body_count"] = rigid_body_count
             data_dict[ "skeleton_count"] =skeleton_count
+            data_dict[ "bone_count"] =bone_count
             data_dict[ "labeled_marker_count"] = labeled_marker_count
             data_dict[ "timecode"] = timecode
             data_dict[ "timecode_sub"] = timecode_sub

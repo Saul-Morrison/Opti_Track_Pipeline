@@ -67,7 +67,7 @@ class Visualiser:
             quaternion = Quaternion(quaternions[i])
             rotated_vector = quaternion.rotate(vectors[i])
             rotated_vectors = np.vstack((rotated_vectors, rotated_vector))
-        print(np.array(rotated_vectors).shape)
+        # print(np.array(rotated_vectors).shape)
         return np.array(rotated_vectors)
 
     def visualiseVectorsFrom3DarrayAnimation(self, RelativeView=False, record=False):
@@ -125,7 +125,12 @@ class Visualiser:
 
 
             self.quiver.remove()
-            self.quiver = ax.quiver(*get_arrows(offsets=offsets, quaternions=quaternions, ref_vectors=reference_vectors), length=50, normalize=True)
+            if RelativeView:
+                length = 1
+            else:
+                length = 0.2
+
+            self.quiver = ax.quiver(*get_arrows(offsets=offsets, quaternions=quaternions, ref_vectors=reference_vectors), length=length, normalize=True)
 
 
 
@@ -134,13 +139,13 @@ class Visualiser:
         ax = fig.add_subplot(111, projection='3d')
         title = ax.set_title('Plotting rigid bodies')
         if RelativeView:
-            ax.axes.set_xlim3d(left=-1, right=1) 
-            ax.axes.set_ylim3d(bottom=-1, top=1) 
-            ax.axes.set_zlim3d(bottom=-1, top=1) 
+            ax.axes.set_xlim3d(left=-2, right=2) 
+            ax.axes.set_ylim3d(bottom=-2, top=2) 
+            ax.axes.set_zlim3d(bottom=-2, top=2) 
         else:
-            ax.axes.set_xlim3d(left=-1000, right=1000) 
-            ax.axes.set_ylim3d(bottom=-1000, top=1000) 
-            ax.axes.set_zlim3d(bottom=-1000, top=1000) 
+            ax.axes.set_xlim3d(left=-3, right=3) 
+            ax.axes.set_ylim3d(bottom=-3, top=3) 
+            ax.axes.set_zlim3d(bottom=-3, top=3) 
 
         # plot the first set of data
         rotated_vectors = self.transformQuiver(quaternions=quaternions, vectors=reference_vectors)

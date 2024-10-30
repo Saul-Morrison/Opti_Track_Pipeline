@@ -40,9 +40,10 @@ import numpy as np
 
 # This is a callback function that gets connected to the NatNet client
 # and called once per mocap frame.
+
+
 def receive_new_frame(data_dict):
-    #print('Received new Frame')
-    order_list=[ "frameNumber", "markerSetCount", "unlabeledMarkersCount", "rigidBodyCount", "skeletonCount",
+    order_list=[ "frameNumber", "markerSetCount", "unlabeledMarkersCount", "rigidBodyCount", "skeletonCount", "bonecount",
                 "labeledMarkerCount", "timecode", "timecodeSub", "timestamp", "isRecording", "trackedModelsChanged" ]
     dump_args = False
     if dump_args == True:
@@ -55,19 +56,22 @@ def receive_new_frame(data_dict):
         print(out_string)
 
 # This is a callback function that gets connected to the NatNet client. It is called once per rigid body per frame
-def receive_rigid_body_frame( rigid_body, shared_array):
-    print( "Received frame for rigid body", rigid_body.id_num," ",rigid_body.pos," ",rigid_body.rot )
+def receive_rigid_body_frame( rigid_body, shared_array, counter):
+    # print( "Received frame for rigid body", rigid_body.id_num," ",rigid_body.pos," ",rigid_body.rot )
     # In this example: rigid body 1 is the only one that exists, and it's the one we care about
-    if rigid_body.id_num == 325:
+    # print(shared_array.shape)
+    ALL = True
+    if ((rigid_body.id_num in ValidRigidBodyNumbers) or ALL):
         idx = 0
         for p in rigid_body.pos:
-            shared_array[idx] = p
+            shared_array[counter][idx] = p
             idx += 1
 
         for r in rigid_body.rot:
-            shared_array[idx] = r
+            shared_array[counter][idx] = r
             idx += 1
-
+        # print('counter:', counter, '\nRigidBodyID: ', rigid_body.id_num)
+        
 # This is a callback function that gets connected to the NatNet client. It is called once per frame.
 # Dump position data for all markers in skeleton into shared memory
 # def receive_marker_data_frame(marker_data, shared_array):
@@ -226,11 +230,11 @@ def fetchMotiveData(clientAddress = "192.168.0.128", serverAddress = "192.168.0.
     streaming_client.set_shared_array(optionsDict["shared_array"])
     streaming_client.set_print_level(0)
     # Configure the streaming client to call our rigid body handler on the emulator to send data out.
-    # streaming_client.new_frame_listener = receive_new_frame
+    streaming_client.new_frame_listener = receive_new_frame
     streaming_client.rigid_body_listener = receive_rigid_body_frame
-    #streaming_client.marker_data_listener = receive_marker_data_frame
-    streaming_client.labeled_marker_data_listener = receive_labeled_marker_data_frame
-    streaming_client.rigid_body_marker_data_listener = receive_rigid_body_marker_data_frame
+    # streaming_client.marker_data_listener = receive_marker_data_frame
+    # streaming_client.labeled_marker_data_listener = receive_labeled_marker_data_frame
+    # streaming_client.rigid_body_marker_data_listener = receive_rigid_body_marker_data_frame
     
     # Start up the streaming client now that the callbacks are set up.
     # This will run perpetually, and operate on a separate thread.
