@@ -3,15 +3,13 @@ This object streams from motive and puts data into shared memory.
 There is also an option to simulate a livestreamed data from motive.
 Much of this is taken from Ashwin's StreamData file
 '''
-
-import os
-import sys
 import pandas as pd
 import numpy as np
 from multiprocessing import shared_memory
-import atexit
 import time
 import lib_streamAndRenderDataWorkflows.Client.PythonSample as PythonSample
+from lib_streamAndRenderDataWorkflows import config_streaming
+
 
 class DataStreamer:
 
@@ -23,8 +21,10 @@ class DataStreamer:
         @PARAM: noDataTypes - How many different data types that are recorded (i.g. how many bones)
         """
         self.SharedMemName = SharedMemoryName
-        self.dataType = dataType
-        self.noDataTypes = noDataTypes
+        self.DataTypesArray = config_streaming.DataTypesArray
+        self.NumTypesArray = config_streaming.NumDataTypesArray
+        self.noDataTypes = sum(self.NumTypesArray)
+        self.CalculateArrayShape()
         self.shared_block, self.sharedArray = self.defineSharedMemory()
         global bodyType_
         bodyType_ = None
@@ -34,6 +34,27 @@ class DataStreamer:
     def FetchLiveData(self):
         PythonSample.fetchMotiveData(clientAddress = "192.168.0.128", serverAddress = "192.168.0.14", shared_array_pass=self.sharedArray, shared_block_pass=self.shared_block)
 
+    def CalculateVarsPerData(self):
+        """
+        Function determines how many variables there are per datatype (either markers or rigid bodies).
+        """
+        for DataType in self.DataTypesArray:
+            if 'Marker' in DataType:
+                return 3
+        return 7
+
+
+    def CalculateArrayShape(self):
+        """
+        Function to calculate how many different data entries there are.
+        Same as number of datatypes multiplied by num of variables per datatype
+        """
+        self.VarsPerDataType = self.CalculateVarsPerData()
+        self.dataEntries = 0
+        for Numtypes in self.NumTypesArray:
+            self.dataEntries += (Numtypes * self.VarsPerDataType)
+
+
     def SimulateLiveData(self, gameSavelocation, timeout = 20.000):
         """
         Function to simulate live data from a given csv file
@@ -41,6 +62,7 @@ class DataStreamer:
         @PARAM: simulatedDF - Dataframe containing each frame with index, time stamp and associated values
         """
         simulatedDF = self.ProcessDataFrame(gameSavelocation)
+        print(simulatedDF.shape)
         is_looping = True
         t_start = time.time()
 
@@ -55,7 +77,7 @@ class DataStreamer:
             for i in range(0,simulatedDF.shape[0]):
                 timestamp = float('%.3f'%(time.time() - t_start))
                 self.SimulateRowSharedMemoryDump(simulatedDF=simulatedDF, frame = i)
-                time.sleep(0.008) # change this later
+                time.sleep(0.008) # --------------------change this later-------------------
                 if i%100 == 0:
                     print("Dumped Frame {} into shared memory".format(i))
 
@@ -70,7 +92,7 @@ class DataStreamer:
         simulatedDF = pd.read_csv(gameSaveLocation, delimiter=',',skiprows=7)
         columns_to_delete = []
         for i in range(simulatedDF.shape[1]):
-            if headers_df.iloc[0, i] != self.dataType:
+            if headers_df.iloc[1, i] not in self.DataTypesArray:
                 columns_to_delete.append(i)
         simulatedDF.drop(simulatedDF.columns[columns_to_delete], axis=1, inplace=True)
         return simulatedDF
@@ -85,16 +107,13 @@ class DataStreamer:
         """
         rowData = simulatedDF.iloc[frame,:].reset_index(drop=True)
         lengthRowData = rowData.shape[0]
-        noTypes,noDims = self.sharedArray.shape
-        if preprocessedSharedArray: 
-            noDims = 6
         count = 0
         i = 0
         while count < lengthRowData:
-            for j in range(0,noDims):
+            for j in range(self.VarsPerDataType):
                 self.sharedArray[i][j] = rowData[count+j]
             i += 1
-            count += noDims
+            count += self.VarsPerDataType
         
     def defineSharedMemory(self, simulate = True,bodyType = None):
         """
@@ -106,27 +125,16 @@ class DataStreamer:
         upper skeleton there are 25
         """
         if simulate:
-
-            self.varsPerDataType = None
-            if 'Marker' in self.dataType:
-                self.varsPerDataType = 3 # doesn't have rotations, only x,y,z
-            else:
-                self.varsPerDataType = 7 # 4 rotations and 3 positions
-            dataEntries = self.varsPerDataType * self.noDataTypes # calculate how many data entries needed for each timestamp
-
             try:
-                shared_block = shared_memory.SharedMemory(size= dataEntries * 8, name=self.SharedMemName, create=True)
+                shared_block = shared_memory.SharedMemory(size= self.dataEntries * 8, name=self.SharedMemName, create=True)
             except FileExistsError:
                 Warning(FileExistsError)
                 userInput = input("Do you want to instead use the existing shared memory, Saying anything other than y will end the program? - y/n ")
                 if userInput == "y":
-                    shared_block = shared_memory.SharedMemory(size= dataEntries * 8, name=self.SharedMemName, create=False)
+                    shared_block = shared_memory.SharedMemory(size= self.dataEntries * 8, name=self.SharedMemName, create=False)
                 else:
                     raise Exception(FileExistsError)
-            if self.noDataTypes == 1:
-                shared_array = np.ndarray(shape=(self.varsPerDataType), dtype=np.float64, buffer=shared_block.buf)
-            else:
-                shared_array = np.ndarray(shape=(self.noDataTypes,self.varsPerDataType), dtype=np.float64, buffer=shared_block.buf)
+            shared_array = np.ndarray(shape=(self.noDataTypes,self.VarsPerDataType), dtype=np.float64, buffer=shared_block.buf)
 
         else:
             pass

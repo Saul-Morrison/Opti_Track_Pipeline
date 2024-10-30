@@ -78,7 +78,7 @@ class DataHandler:
                     Skeleton.add_rigid_body(RigidBone)
                 SkeletonCounter += 1
                 self.SkeletonData.add_skeleton(Skeleton)
-            if DataType == "RigidBody":
+            if DataType == "Rigid Body":
                 for i in range(NumTypes):
                     id = config_streaming.RigidBodyIDs[i]
                     pos = np.zeros(3)
@@ -114,7 +114,7 @@ class DataHandler:
                     self.SkeletonData.skeleton_list[SkeletonCounter].rigid_body_list[i].pos = self.shared_array[counter+i][4:]
                     self.SkeletonData.skeleton_list[SkeletonCounter].rigid_body_list[i].rot = self.shared_array[counter+i][:4]
                 SkeletonCounter += 1
-            elif DataType == "RigidBody":
+            elif DataType == "Rigid Body":
                 for i in range(NumTypes):
                     self.RigidBodyData.rigid_body_list[RigidBodyCounter].pos = self.shared_array[counter+i][4:]
                     self.RigidBodyData.rigid_body_list[RigidBodyCounter].rot = self.shared_array[counter+i][:4]
@@ -127,7 +127,7 @@ class DataHandler:
                 for i in range(NumTypes):
                     self.SkeletonMarkerSet.marker_data_list[RigidBodyMarkerSetCounter][i].pos = self.shared_array[counter+i]
                 RigidBodyMarkerSetCounter = 0
-            counter += NumTypes * self.VarsPerDataType
+            counter += NumTypes
 
     def MakeInfoHeader(self):
         #------------------------------Fill out with format version, etc....--------------------------
@@ -152,7 +152,7 @@ class DataHandler:
                     InfoTypeHeader += ['Rotation','Rotation','Rotation','Rotation','Position','Position','Position']
                     XYZHeader += ['X','Y','Z','W','X','Y','Z']
                 SkeletonCounter+=1
-            elif DataType == 'RigidBody':
+            elif DataType == 'Rigid Body':
                 DataTypeHeader += [DataType] * 7
                 IDHeader += [self.RigidBodyData.rigid_body_list[RigidBodyCounter]] * 7
                 InfoTypeHeader += ['Rotation','Rotation','Rotation','Rotation','Position','Position','Position']
