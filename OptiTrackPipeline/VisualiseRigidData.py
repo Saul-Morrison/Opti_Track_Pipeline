@@ -1,5 +1,5 @@
 import sys
-sys.path.append("c:/users/saulm/appdata/local/programs/python/python310/lib/site-packages")
+sys.path.append("C:/users/saulm/appdata/local/programs/python/python310/lib/site-packages")
 import argparse
 from lib_streamAndRenderDataWorkflows.DataHandler import DataHandler
 from lib_streamAndRenderDataWorkflows.Visualiser import Visualiser
