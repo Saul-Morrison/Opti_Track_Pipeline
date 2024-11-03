@@ -123,8 +123,6 @@ class Visualiser:
 
 
             self.quiver.remove()
-            frame_end = time.perf_counter()
-            title.set_text(f'Plotting markers, time={num}\nFrame Frequency = {1/(frame_end-frame_start):.2f}')
            
             if RelativeView:
                 length = 1
@@ -132,6 +130,8 @@ class Visualiser:
                 length = 0.2
 
             self.quiver = ax.quiver(*get_arrows(offsets=offsets, quaternions=quaternions, ref_vectors=reference_vectors), length=length, normalize=True)
+            frame_end = time.perf_counter()
+            title.set_text(f'Plotting markers, time={num}\nFrame Frequency = {1/(frame_end-frame_start):.2f}')
 
 
 

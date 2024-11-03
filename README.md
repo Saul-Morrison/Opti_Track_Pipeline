@@ -11,13 +11,7 @@ Get accurate framerate readings
 
 Make DataStreamer simulte each frame at correct time (cleanup interval programming)
 
-
+Fix Python Path problems for python libraries
 
 #----------------------------------ASKCHARLIE-----------------------
 Can I stream accurate dimensions of skeleton? (i.e. bone length)
-
-Quartonions and different datatypes?
-
-Ashwin originally added quaternions to offsets
-
-Format Version 1.23, Where to find??
