@@ -66,6 +66,8 @@ class DataStreamer:
         is_looping = True
         t_start = time.time()
 
+        frame_end = 0
+        frame_start = 0
         while is_looping:
             timestamp = float('%.3f'%(time.time() - t_start))
             if timestamp > timeout:
@@ -75,11 +77,17 @@ class DataStreamer:
 
             # dump latest data into shared memory
             for i in range(0,simulatedDF.shape[0]):
+                frame_start = time.perf_counter()
                 timestamp = float('%.3f'%(time.time() - t_start))
                 self.SimulateRowSharedMemoryDump(simulatedDF=simulatedDF, frame = i)
                 time.sleep(0.008) # --------------------change this later-------------------
                 if i%100 == 0:
                     print("Dumped Frame {} into shared memory".format(i))
+                    frame_end = time.perf_counter()
+                    print("Frequency of {} frames per second".format(1/(frame_end-frame_start)))
+
+        
+            
 
     def ProcessDataFrame(self, gameSaveLocation):
         """

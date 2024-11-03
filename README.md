@@ -5,15 +5,13 @@ Much of this work will be taken from the work of Ashwin's project and Charlie's 
 
 #--------------------------------TODO--------------------------------------
 
-Cleanup SimulateLiveData 
+Start Game
 
-Integrate Param files into DataHandler
+Get accurate framerate readings
 
-Finish DataHandler For Recording and Visualising Data From Shared Mem
+Make DataStreamer simulte each frame at correct time (cleanup interval programming)
 
-Investigate frequency of animation
 
-Get a proper animation (using py3d??) 
 
 #----------------------------------ASKCHARLIE-----------------------
 Can I stream accurate dimensions of skeleton? (i.e. bone length)
