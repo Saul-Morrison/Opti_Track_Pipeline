@@ -8,11 +8,13 @@ To be kept in same folder as DataStreamer.py and DataHandler.py
 RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/LiveDemo'
 
 #Arrays of datatypes and number of data types to be streamed and handled
-DataTypesArray = ['Rigid Body', 'Bone']
+DataTypesArray = ['Rigid Body']
 
-NumDataTypesArray = [1,51]
+NumDataTypesArray = [1]
 
 ValidRigidBodyNumbers = [325]
+
+GameData = ['BalancingPole']
 
 # list of rigid body parts 
 BodyPartsIDs = ['Pelvis', 'Ab', 'Chest', 'Neck', 'Head', 'LShoulder', 'LUArm', 

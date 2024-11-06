@@ -13,7 +13,7 @@ from lib_streamAndRenderDataWorkflows import config_streaming
 
 class DataStreamer:
 
-    def __init__(self, SharedMemoryName = 'motive dump', dataType = 'Bone Marker', noDataTypes = 3,clientAddress = "192.168.0.128", serverAddress = "192.168.0.14" ):
+    def __init__(self, SharedMemoryName = 'motive dump', clientAddress = "192.168.0.128", serverAddress = "192.168.0.14" ):
         """
         Class to stream data and dump into a shared memory
         @PARAM: SharedMemoryName - Name of the shared memory

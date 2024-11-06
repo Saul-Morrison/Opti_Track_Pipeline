@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cen4af481mvyo"]
+
+[ext_resource type="Script" path="res://FetchPoleData.gd" id="1_1bmuv"]
+[ext_resource type="Script" path="res://pole.gd" id="2_nvpls"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jmcos"]
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_1bmuv")
+
+[node name="Pole" type="RigidBody3D" parent="."]
+gravity_scale = 0.0
+script = ExtResource("2_nvpls")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pole"]
+transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0, 4, 0)
+mesh = SubResource("CylinderMesh_jmcos")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 5, 0)

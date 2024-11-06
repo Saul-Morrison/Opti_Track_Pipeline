@@ -9,7 +9,7 @@ args = parser.parse_args()
 
 gameSaveLocation = args.simulate
 timeout = args.timeout
-streamer = DataStreamer(SharedMemoryName='Motive Dump', dataType='Bone', noDataTypes=51)
+streamer = DataStreamer(SharedMemoryName='Motive Dump')
 
 if __name__ == "__main__":
     if gameSaveLocation is not None:

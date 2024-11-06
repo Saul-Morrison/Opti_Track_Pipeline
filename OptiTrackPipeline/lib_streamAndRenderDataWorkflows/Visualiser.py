@@ -5,7 +5,6 @@ import copy
 import time
 import numpy as np
 from datetime import datetime
-from pyquaternion import quaternion
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.widgets import CheckButtons as cb
@@ -120,7 +119,8 @@ class Visualiser:
             self.Data.UpdateMocapData()
             offsets, quaternions = self.GetOffSetsAndQuarts(self.VisibleVectors)
             
-
+            if record:
+                self.Data.RecordLineToCSV(frame_start, num)
 
             self.quiver.remove()
            

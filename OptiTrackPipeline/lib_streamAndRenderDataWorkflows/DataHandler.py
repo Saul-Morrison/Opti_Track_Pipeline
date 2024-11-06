@@ -7,12 +7,17 @@ from multiprocessing import shared_memory
 import csv
 import os
 from datetime import datetime
+import socket
 from pyquaternion import Quaternion
 from lib_streamAndRenderDataWorkflows.Client import MoCapData
 
 class DataHandler:
 
     def __init__(self, SharedMemName):
+        '''
+        @PARAM: SharedMemName - Name of Shared Memory that streams from motive
+        @PARAM: GameData      - Array of rigid body IDs to be used in the game
+        '''
         self.SharedMemName = SharedMemName
         self.DataTypesArray = config_streaming.DataTypesArray
         self.NumTypesArray = config_streaming.NumDataTypesArray
@@ -22,6 +27,7 @@ class DataHandler:
         self.CalculateArrayShape()
         self.AccessSharedMem()
         self.CreateMocapData()
+
 
     def CalculateVarsPerData(self):
         """
@@ -116,8 +122,8 @@ class DataHandler:
                 SkeletonCounter += 1
             elif DataType == "Rigid Body":
                 for i in range(NumTypes):
-                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].pos = self.shared_array[counter+i][:3]
-                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].rot = self.shared_array[counter+i][3:]
+                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].pos = self.shared_array[counter+i][4:]
+                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].rot = self.shared_array[counter+i][:4]
                 RigidBodyCounter += 1
             elif DataType == "Bone Marker":
                 for i in range(NumTypes):
