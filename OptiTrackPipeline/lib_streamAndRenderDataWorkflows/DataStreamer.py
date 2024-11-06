@@ -61,30 +61,34 @@ class DataStreamer:
         @PARAM: timeout - How long to run the simulation for
         @PARAM: simulatedDF - Dataframe containing each frame with index, time stamp and associated values
         """
-        simulatedDF = self.ProcessDataFrame(gameSavelocation)
+        simulatedDF, timings = self.ProcessDataFrame(gameSavelocation)
         print(simulatedDF.shape)
         is_looping = True
         t_start = time.time()
 
-        frame_end = 0
         frame_start = 0
         while is_looping:
+            simulation_t_start = time.perf_counter()
             timestamp = float('%.3f'%(time.time() - t_start))
             if timestamp > timeout:
                 is_looping = False
+                print('Timeout Reached: ENDING PROGRAM')
                 self.shared_block.close()
                 break
+            
 
             # dump latest data into shared memory
-            for i in range(0,simulatedDF.shape[0]):
-                frame_start = time.perf_counter()
-                timestamp = float('%.3f'%(time.time() - t_start))
+            for i in range(frame_start,simulatedDF.shape[0]):
+                frame_t_start = time.perf_counter()
+                wait = True
+                while wait:
+                    if (time.perf_counter() - simulation_t_start) >= timings[i]:
+                        wait = False
                 self.SimulateRowSharedMemoryDump(simulatedDF=simulatedDF, frame = i)
-                time.sleep(0.008) # --------------------change this later-------------------
                 if i%100 == 0:
                     print("Dumped Frame {} into shared memory".format(i))
-                    frame_end = time.perf_counter()
-                    print("Frequency of {} frames per second".format(1/(frame_end-frame_start)))
+                    frame_t_end = time.perf_counter()
+                    print("Frequency of {} frames per second".format(1/(frame_t_end-frame_t_start)))
 
         
             
@@ -99,11 +103,15 @@ class DataStreamer:
         headers_df = pd.DataFrame(headers_df)
         simulatedDF = pd.read_csv(gameSaveLocation, delimiter=',',skiprows=5)
         columns_to_delete = []
+        time_column = []
         for i in range(simulatedDF.shape[1]):
+            if (headers_df.iloc[4,i] == 'Time'
+                or headers_df.iloc[4,i] == 'time'):
+                time_column = simulatedDF.iloc[:,i]
             if headers_df.iloc[0, i] not in self.DataTypesArray:
                 columns_to_delete.append(i)
         simulatedDF.drop(simulatedDF.columns[columns_to_delete], axis=1, inplace=True)
-        return simulatedDF
+        return simulatedDF, time_column
 
     def SimulateRowSharedMemoryDump(self, simulatedDF, preprocessedSharedArray = False, frame = 0,):
         """

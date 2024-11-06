@@ -7,7 +7,7 @@ parser.add_argument("--simulate", type=str, default=None, help="Argument to Simu
 parser.add_argument("--timeout", type = float, default = 1000, help="Argument to set timeout for simulation")
 args = parser.parse_args()
 
-gameSaveLocation = args.simulate
+gameSaveLocation = agrs.simulate
 timeout = args.timeout
 streamer = DataStreamer(SharedMemoryName='Motive Dump')
 

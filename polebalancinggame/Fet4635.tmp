@@ -1,11 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cen4af481mvyo"]
+[gd_scene load_steps=4 format=3 uid="uid://cen4af481mvyo"]
 
 [ext_resource type="Script" path="res://FetchPoleData.gd" id="1_1bmuv"]
 [ext_resource type="Script" path="res://pole.gd" id="2_nvpls"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_jmcos"]
-
-[sub_resource type="Environment" id="Environment_m348s"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_1bmuv")
@@ -23,4 +21,3 @@ mesh = SubResource("CylinderMesh_jmcos")
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 5, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_m348s")
