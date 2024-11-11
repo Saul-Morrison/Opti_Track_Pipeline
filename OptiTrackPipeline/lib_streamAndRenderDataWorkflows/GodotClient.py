@@ -17,7 +17,7 @@ def SendRigidBodyToGodot(GameData, data, s, HOST, PORT):
             datatosendArray.extend(RigidBody.rot)
 
     datatosend = struct.pack('7f', *datatosendArray)
-    time.sleep(0.016)
+
     s.sendto(datatosend, (HOST, PORT))
 
 
@@ -37,7 +37,10 @@ def ConnectToGodot(data, GameData, HOST='127.0.0.1', PORT=4242):
             while True:
                 # Replace with real rotation values
                 data.UpdateMocapData()
+                start_t = time.perf_counter()
                 SendRigidBodyToGodot(GameData, data, s, HOST, PORT)
+                end_t = time.perf_counter()
+                # print('latency: ', end_t - start_t)
 
         except ConnectionRefusedError:
             print("Connection to Godot server failed. Ensure the server is running.")

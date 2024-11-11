@@ -10,6 +10,7 @@ from datetime import datetime
 import socket
 from pyquaternion import Quaternion
 from lib_streamAndRenderDataWorkflows.Client import MoCapData
+import time
 
 class DataHandler:
 
@@ -122,8 +123,8 @@ class DataHandler:
                 SkeletonCounter += 1
             elif DataType == "Rigid Body":
                 for i in range(NumTypes):
-                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].pos = self.shared_array[counter+i][4:]
-                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].rot = self.shared_array[counter+i][:4]
+                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].pos = self.shared_array[counter+i][:3]
+                    self.RigidBodyData.rigid_body_list[RigidBodyCounter].rot = self.shared_array[counter+i][3:]
                 RigidBodyCounter += 1
             elif DataType == "Bone Marker":
                 for i in range(NumTypes):

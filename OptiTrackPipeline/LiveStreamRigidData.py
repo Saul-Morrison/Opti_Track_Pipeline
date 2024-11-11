@@ -1,5 +1,6 @@
 from lib_streamAndRenderDataWorkflows.DataStreamer import DataStreamer
 import argparse
+import time
 
 parser = argparse.ArgumentParser(description="A script to demonstrate command line arguments.")
 
@@ -7,7 +8,7 @@ parser.add_argument("--simulate", type=str, default=None, help="Argument to Simu
 parser.add_argument("--timeout", type = float, default = 1000, help="Argument to set timeout for simulation")
 args = parser.parse_args()
 
-gameSaveLocation = agrs.simulate
+gameSaveLocation = args.simulate
 timeout = args.timeout
 streamer = DataStreamer(SharedMemoryName='Motive Dump')
 
