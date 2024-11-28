@@ -79,7 +79,7 @@ class system_identifier():
         for filename in os.listdir(self.path_to_folder):
             file_path = os.path.join(self.path_to_folder, filename)  # Full path to file
             dataframe, times = ProcessDataFrame(file_path)
-            xs, ys = get_y_x_displacements(dataframe, [3,4])
+            xs, ys = get_y_x_displacements(dataframe, [3,4], 0.49, 0.06)
 
             quant_initx, xs = self.quantise_2_datas(init_times, times, init_xs, xs)
             quant_inity, ys = self.quantise_2_datas(init_times, times, init_ys, ys)
@@ -92,7 +92,7 @@ class system_identifier():
 
     def find_init_model_fit(self):
         dataframe, times = ProcessDataFrame(self.path_init)
-        init_xs, init_ys = get_y_x_displacements(dataframe, [3,4])
+        init_xs, init_ys = get_y_x_displacements(dataframe, [3,4], 0.49, 0.06)
         self.times = times
         result = minimize(self.loss_function, [5, 10, 0.0065],args=(init_ys, init_xs))
         self.K_p, self.k_d, self.cut_off = result.x
@@ -111,7 +111,7 @@ class system_identifier():
         init_xs, init_ys, times1 = self.find_init_model_fit()
 
         dataframe, times2 = ProcessDataFrame(self.path_to_compare)
-        xs, ys = get_y_x_displacements(dataframe, [3,4])
+        xs, ys = get_y_x_displacements(dataframe, [3,4], 0.49, 0.06)
 
         init_xs, xs = self.quantise_2_datas(times1, times2, init_xs, xs)
         init_ys, ys = self.quantise_2_datas(times1, times2, init_ys, ys)

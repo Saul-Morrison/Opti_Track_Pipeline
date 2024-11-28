@@ -33,10 +33,31 @@ func _update_pole_trans(pole: Node3D, packet: PackedByteArray) -> void:
 		floats.append(data)
 
 	var quaternion = Quaternion(floats[4], floats[5], floats[3], floats[6]).normalized()
+	_augment_pole_angle(pole, quaternion)
+	_alert_pole_angle(pole)
 
-	pole.rotation = quaternion.get_euler()
+func _augment_pole_angle(pole: Node3D, quaternion: Quaternion)->void:
+	var rotations = quaternion.get_euler()
+	var x = rotations.x
+	if x > 0:
+		x = x + 3.2 * (x**0.7) * exp(-7.3*x)
+	else:
+		x = -1 * x
+		x = x + 3.2 * (x**0.7) * exp(-7.3*x)
+		x = x * -1
+	var z = rotations.z
+	if z > 0:
+		z = z + 3.2 * z * exp(-7.3*z)
+	else:
+		z = -1 * z
+		z = z + 3.2 * z * exp(-7.3*z)
+		z = z * -1
+	pole.rotation.x = x
+	pole.rotation.z = z
+	pole.rotation.y = rotations.y
 
 func _alert_pole_angle(pole: Node3D)->void:
+	
 	if (pole.rotation.x >= 0.15 or pole.rotation.x <= -0.15 or pole.rotation.z >= 0.15 or pole.rotation.z <= -0.15):
 		_set_background(world_environment.environment, Color(1, 0, 0))
 	else:
@@ -49,7 +70,5 @@ func _process(_delta: float) -> void:
 	while udp_peer.get_available_packet_count() > 0:
 		packet = udp_peer.get_packet()
 	_update_pole_trans(pole, packet)
-	_alert_pole_angle(pole)
-	
 			
 			

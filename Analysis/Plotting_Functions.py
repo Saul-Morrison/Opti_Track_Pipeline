@@ -35,7 +35,7 @@ def get_euc_dist(pos1, pos2):
     '''
     return abs(np.linalg.norm(pos2 - pos1))
 
-def get_y_x_displacements(data, marknums):
+def get_y_x_displacements(data, marknums, z_placement, extra):
     '''
     Returns two arrays with y and x displacement relative to vertical and starting positition relatively
     @PARAM: data - data of marker position in a pandas dataframe
@@ -51,7 +51,7 @@ def get_y_x_displacements(data, marknums):
     x_start = data.iloc[0,3*x_num-3:3*x_num].to_numpy()    
 
     for xrow, yrow in zip(xrows, yrows):
-        rel_y = get_euc_dist(xrow + [0, 0, 0.49], yrow) -0.06
+        rel_y = get_euc_dist(xrow + [0, 0, z_placement], yrow) - extra
         if abs(rel_y) < 0.005:
             x_start = xrow
         relative_xs.append(get_euc_dist(x_start, xrow))
@@ -77,7 +77,7 @@ def plot_y_x_displacement(xs, ys, times):
     plt.show()
 
 if __name__ == "__main__":
-    datalocation = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/TFunction2024_11_18_16_07.csv'
+    datalocation = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/TFunctions/SMImpulseBalanceMid2024_11_28_12_36.csv'
     dataframe, times = ProcessDataFrame(datalocation)
-    rel_xs, rel_ys = get_y_x_displacements(dataframe, [3,4])
+    rel_xs, rel_ys = get_y_x_displacements(dataframe, [5,1], 0.42, 0.06)
     plot_y_x_displacement(rel_xs, rel_ys, times)

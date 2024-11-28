@@ -5,7 +5,7 @@ To be kept in same folder as DataStreamer.py and DataHandler.py
 """
 
 #Paths to CSVs:
-RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/TFunction'
+RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/TFunctions/SMImpulseBalanceMid'
 
 #Arrays of datatypes and number of data types to be streamed and handled
 DataTypesArray = ['Rigid Body']
