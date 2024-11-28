@@ -74,12 +74,11 @@ def receive_rigid_body_frame( rigid_body, shared_array, counter):
         
 # This is a callback function that gets connected to the NatNet client. It is called once per frame.
 # Dump position data for all markers in skeleton into shared memory
-# def receive_marker_data_frame(marker_data, shared_array):
-#     #print( "Received frame for marker set", marker_data )
-#     noTypes,noDims = shared_array.shape
-#     for i in range(0,noTypes):
-#         for j in range(0,noDims):
-#             shared_array[i][j] = marker_data[i][j]
+def receive_marker_data_frame(marker_data, shared_array):
+    #print( "Received frame for marker set", marker_data )
+    noTypes, noDims = shared_array.shape
+    for i in range(0,noTypes):
+        shared_array[i] = marker_data.marker_pos_list[i]
 
 def receive_labeled_marker_data_frame(labeled_marker_data, shared_array):
     #print( "Received frame for marker set", marker_data )
@@ -90,15 +89,15 @@ def receive_labeled_marker_data_frame(labeled_marker_data, shared_array):
             shared_array[i][j] = markers[i].pos[j]
 
 def receive_rigid_body_marker_data_frame(rigid_body_data, shared_array):
-    # #print( "Received frame for marker set", marker_data )
-    # body = rigid_body_data.rigid_body_list
-    # noTypes,noDims = shared_array.shape
-    # for i in range(0,noTypes):
-    #     for j in range(0,noDims):
-    #         if j<4:
-    #             shared_array[i][j] = body[i].rot[j]
-    #         else:
-    #             shared_array[i][j] = body[i].pos[j]
+    #print( "Received frame for marker set", marker_data )
+    body = rigid_body_data.rigid_body_list
+    noTypes,noDims = shared_array.shape
+    for i in range(0,noTypes):
+        for j in range(0,noDims):
+            if j<4:
+                shared_array[i][j] = body[i].rot[j]
+            else:
+                shared_array[i][j] = body[i].pos[j]
     pass
 
 
@@ -232,7 +231,7 @@ def fetchMotiveData(clientAddress = "192.168.0.128", serverAddress = "192.168.0.
     # Configure the streaming client to call our rigid body handler on the emulator to send data out.
     streaming_client.new_frame_listener = receive_new_frame
     streaming_client.rigid_body_listener = receive_rigid_body_frame
-    # streaming_client.marker_data_listener = receive_marker_data_frame
+    streaming_client.marker_data_listener = receive_marker_data_frame
     # streaming_client.labeled_marker_data_listener = receive_labeled_marker_data_frame
     # streaming_client.rigid_body_marker_data_listener = receive_rigid_body_marker_data_frame
     

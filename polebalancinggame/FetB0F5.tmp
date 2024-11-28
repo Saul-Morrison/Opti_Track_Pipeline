@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://cen4af481mvyo"]
+
+[ext_resource type="Script" path="res://FetchPoleData.gd" id="1_1bmuv"]
+[ext_resource type="Script" path="res://pole.gd" id="2_nvpls"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jmcos"]
+
+[sub_resource type="Environment" id="Environment_m348s"]
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_1bmuv")
+
+[node name="Pole" type="RigidBody3D" parent="."]
+gravity_scale = 0.0
+script = ExtResource("2_nvpls")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pole"]
+transform = Transform3D(0.999984, -0.0216941, 0.00136147, 0.00542593, 3.99993, -0.00176308, -0.0013519, 0.00708168, 0.999998, -5.00586e-09, 4, -3.72529e-09)
+mesh = SubResource("CylinderMesh_jmcos")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 2.44702e-14, -8.74228e-08, -7.48146e-08, 0.51734, 0.85578, 4.52273e-08, 0.85578, -0.51734, 0, 14.008, -5)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_m348s")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer"]
+visible = false
+offset_top = 1.0
+offset_right = 68.0
+offset_bottom = 31.0
+fit_content = true
+visible_characters = 20

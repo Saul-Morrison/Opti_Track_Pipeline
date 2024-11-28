@@ -74,6 +74,8 @@ class DataHandler:
         self.SkeletonMarkerSet = MoCapData.MarkerSetData()
         self.RigidBodyMarkerSet = MoCapData.MarkerSetData()
         SkeletonCounter = 0
+        RigidBodyMarkerSets = 0
+        SkeletonMarkerSets = 0
         for DataType, NumTypes in zip(self.DataTypesArray, self.NumTypesArray):
             if DataType == "Bone":
                 Skeleton = MoCapData.Skeleton('Skeleton'+str(SkeletonCounter))
@@ -93,21 +95,23 @@ class DataHandler:
                     RigidBody = MoCapData.RigidBody(id,pos,rot)
                     self.RigidBodyData.add_rigid_body(RigidBody)
             if DataType == "Bone Marker":
+                BoneMarkers = MoCapData.MarkerData()
+                id = 'skeleton'
+                BoneMarkers.model_name=id
                 for i in range(NumTypes):
-                    id = 'Skeleton'+str(i)+'Markers'
                     pos = np.zeros(3)
-                    BoneMarkers = MoCapData.MarkerData()
-                    BoneMarkers.model_name=id
                     BoneMarkers.add_pos(pos)
-                self.SekeletonMarkerSet.add_marker_data(BoneMarkers)
+                self.SkeletonMarkerSet.add_marker_data(BoneMarkers)
+                SkeletonMarkerSets += 1
             if DataType == "Rigid Body Marker":
+                RigidBodyMarkers = MoCapData.MarkerData()
+                id = config_streaming.RigidBodyIDs[RigidBodyMarkerSets]
+                RigidBodyMarkers.model_name = id
                 for i in range(NumTypes):
-                    id = 'Rigid Body'+str(i)+'Markers'
                     pos = np.zeros(3)
-                    RigidBodyMarkers = MoCapData.MarkerData()
-                    RigidBodyMarkers.model_name = id
                     RigidBodyMarkers.add_pos(pos)
                 self.RigidBodyMarkerSet.add_marker_data(RigidBodyMarkers)
+                RigidBodyMarkerSets += 1
     
     def UpdateMocapData(self):
         SkeletonCounter = 0
@@ -128,12 +132,12 @@ class DataHandler:
                 RigidBodyCounter += 1
             elif DataType == "Bone Marker":
                 for i in range(NumTypes):
-                    self.SkeletonMarkerSet.marker_data_list[SkeletonMarkerSetCounter][i].pos = self.shared_array[counter+i]
+                    self.SkeletonMarkerSet.marker_data_list[SkeletonMarkerSetCounter].marker_pos_list[i] = self.shared_array[counter+i]
                 SkeletonMarkerSetCounter += 1
             elif DataType == "Rigid Body Marker":
                 for i in range(NumTypes):
-                    self.SkeletonMarkerSet.marker_data_list[RigidBodyMarkerSetCounter][i].pos = self.shared_array[counter+i]
-                RigidBodyMarkerSetCounter = 0
+                    self.RigidBodyMarkerSet.marker_data_list[RigidBodyMarkerSetCounter].marker_pos_list[i] = self.shared_array[counter+i]
+                RigidBodyMarkerSetCounter += 0
             counter += NumTypes
 
     def MakeInfoHeader(self):
@@ -166,17 +170,17 @@ class DataHandler:
                 XYZHeader += ['X','Y','Z','W','X','Y','Z']
                 RigidBodyCounter += 1
             elif DataType == 'Bone Marker':
-                MarkerSet = self.SkeletonMarkerSet.marker_data_list[RigidBodyCounter]
-                for marker in MarkerSet:
-                    IDHeader += [marker.model_name] * 3
+                MarkerSet = self.SkeletonMarkerSet.marker_data_list[SkeletonMarkerSetCounter]
+                for marker in MarkerSet.marker_pos_list:
+                    IDHeader += [MarkerSet.model_name] * 3
                     DataTypeHeader += [DataType] * 3
                     InfoTypeHeader += ['Position','Position','Position']
                     XYZHeader += ['X','Y','Z']
                 SkeletonMarkerSetCounter += 1
             elif DataType == 'Rigid Body Marker':
                 MarkerSet = self.RigidBodyMarkerSet.marker_data_list[RigidBodyMarkerSetCounter]
-                for marker in MarkerSet:
-                    IDHeader += [marker.model_name] * 3
+                for marker in MarkerSet.marker_pos_list:
+                    IDHeader += [MarkerSet.model_name] * 3
                     DataTypeHeader += [DataType] * 3
                     InfoTypeHeader += ['Position','Position','Position']
                     XYZHeader += ['X','Y','Z']

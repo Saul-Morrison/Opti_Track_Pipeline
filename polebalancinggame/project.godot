@@ -13,3 +13,11 @@ config_version=5
 config/name="PoleBalancingGame"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/mode=3
+
+[physics]
+
+common/max_physics_steps_per_frame=20

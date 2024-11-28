@@ -19,7 +19,7 @@ transform = Transform3D(0.999984, -0.0216941, 0.00136147, 0.00542593, 3.99993, -
 mesh = SubResource("CylinderMesh_jmcos")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 5, 0)
+transform = Transform3D(-1, -2.99003e-08, 8.21505e-08, 0, 0.939693, 0.34202, -8.74228e-08, 0.34202, -0.939693, 0, 10, -15)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_m348s")
@@ -27,6 +27,7 @@ environment = SubResource("Environment_m348s")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer"]
+visible = false
 offset_top = 1.0
 offset_right = 68.0
 offset_bottom = 31.0
