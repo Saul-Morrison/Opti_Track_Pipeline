@@ -28,7 +28,7 @@ func _ready() -> void:
 func _update_pole_trans(pole: Node3D, packet: PackedByteArray) -> void:
 	var floats = []
 	var data = []
-		
+
 	for i in range(len(packet) / 4):
 		data = packet.decode_float(4*i)
 		floats.append(data)

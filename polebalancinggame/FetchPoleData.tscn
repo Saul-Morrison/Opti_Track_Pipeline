@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cen4af481mvyo"]
+[gd_scene load_steps=6 format=3 uid="uid://cen4af481mvyo"]
 
 [ext_resource type="Script" path="res://FetchPoleData.gd" id="1_1bmuv"]
 [ext_resource type="Script" path="res://pole.gd" id="2_nvpls"]
+[ext_resource type="Script" path="res://camera_3d.gd" id="3_wwfqd"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_jmcos"]
 
@@ -18,8 +19,10 @@ script = ExtResource("2_nvpls")
 transform = Transform3D(0.999984, -0.0216941, 0.00136147, 0.00542593, 3.99993, -0.00176308, -0.0013519, 0.00708168, 0.999998, -5.00586e-09, 4, -3.72529e-09)
 mesh = SubResource("CylinderMesh_jmcos")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, -2.99003e-08, 8.21505e-08, 0, 0.939693, 0.34202, -8.74228e-08, 0.34202, -0.939693, 0, 10, -15)
+[node name="Camera3D" type="Camera3D" parent="Pole/MeshInstance3D"]
+transform = Transform3D(-0.999985, 0.00463631, 0.00312622, 0.00135589, 0.235071, 0.0850878, -0.00136157, 0.340362, -0.940293, 0.0523401, 1.4935, -14.6453)
+visible = false
+script = ExtResource("3_wwfqd")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_m348s")
