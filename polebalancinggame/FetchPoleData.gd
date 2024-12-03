@@ -32,8 +32,7 @@ func _update_pole_trans(pole: Node3D, packet: PackedByteArray) -> void:
 	for i in range(len(packet) / 4):
 		data = packet.decode_float(4*i)
 		floats.append(data)
-		
-
+	#pole.transform.origin = Vector3(floats[0], floats[1], floats[2])
 	var quaternion = Quaternion(floats[4], floats[5], floats[3], floats[6]).normalized()
 	_augment_pole_angle(pole, quaternion)
 	_alert_pole_angle(pole)

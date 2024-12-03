@@ -20,7 +20,7 @@ transform = Transform3D(0.999984, -0.0216941, 0.00136147, 0.00542593, 3.99993, -
 mesh = SubResource("CylinderMesh_jmcos")
 
 [node name="Camera3D" type="Camera3D" parent="Pole/MeshInstance3D"]
-transform = Transform3D(-0.999985, 0.00463631, 0.00312622, 0.00135589, 0.235071, 0.0850878, -0.00136157, 0.340362, -0.940293, 0.0590995, 1.49129, -19.6453)
+transform = Transform3D(-0.999985, 0.00463631, 0.00312622, 0.00135589, 0.235071, 0.0850878, -0.00136157, 0.340362, -0.940293, 0.0523401, 1.4935, -14.6453)
 visible = false
 script = ExtResource("3_wwfqd")
 
