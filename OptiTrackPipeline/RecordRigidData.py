@@ -5,7 +5,8 @@ from lib_streamAndRenderDataWorkflows.DataHandler import DataHandler
 import time
 
 parser = argparse.ArgumentParser(description="A script to demonstrate command line arguments.")
-parser.add_argument('--timeout', type=float, default=20, help="recording time period")
+parser.add_argument('--timeout', type=float, default=100, help="recording time period")
+parser.add_argument('--game', action='store_true', default=False, help='If used, game will stop when pole has fallen')
 
 args = parser.parse_args()
 
@@ -30,6 +31,9 @@ while __name__ == "__main__":
             break
     data.UpdateMocapData()
     data.RecordLineToCSV(time.perf_counter() - start_t, i)
+    if not data.CheckFallen():
+        print(f'Time of: {time.perf_counter() - start_t}')
+        break
     i += 1
     if time.perf_counter() - start_t > args.timeout:
         break

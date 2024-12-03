@@ -9,6 +9,7 @@ parser.add_argument("--timeout", type = float, default = 1000, help="Argument to
 args = parser.parse_args()
 
 gameSaveLocation = args.simulate
+# gameSaveLocation = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/GameTest12024_12_03_13_48.csv'
 timeout = args.timeout
 streamer = DataStreamer(SharedMemoryName='Motive Dump')
 

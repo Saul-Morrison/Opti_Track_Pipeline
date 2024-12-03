@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 import socket
 from pyquaternion import Quaternion
+from scipy.spatial.transform import Rotation
 from lib_streamAndRenderDataWorkflows.Client import MoCapData
 import time
 
@@ -139,6 +140,26 @@ class DataHandler:
                     self.RigidBodyMarkerSet.marker_data_list[RigidBodyMarkerSetCounter].marker_pos_list[i] = self.shared_array[counter+i]
                 RigidBodyMarkerSetCounter += 0
             counter += NumTypes
+
+    def CheckFallen(self):
+        upright = True
+        rot = None
+        for rigidbody in self.RigidBodyData.rigid_body_list:
+            if rigidbody.id_num in config_streaming.GameData:
+                rot = rigidbody.rot
+        if rot is None:
+            raise ValueError('ERROR: Rigid Body Not Found')
+        rot = Quaternion(rot[1], rot[2], rot[0], rot[3]).normalised
+
+        if abs(2*np.arcsin(rot[0])) > 1.17:
+            upright = False
+            print('Recording Stopped, Pole Faling Over x Axis, Angle of: ', 2*np.arcsin(rot[0]))
+        if abs(2*np.arcsin(rot[2])) > 1.17:
+            upright = False
+            print('Recording Stopped, Pole Faling Over z Axis, Angle of: ', 2*np.arcsin(rot[2]))
+
+        return upright
+        
 
     def MakeInfoHeader(self):
         #------------------------------Fill out with format version, etc....--------------------------

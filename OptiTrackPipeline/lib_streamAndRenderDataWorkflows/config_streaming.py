@@ -5,16 +5,16 @@ To be kept in same folder as DataStreamer.py and DataHandler.py
 """
 
 #Paths to CSVs:
-RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/TFunctions/SMImpulseBalanceMid'
+RecordingPath = 'OptiTrackPipeline/test_lib_streamAndRenderDataWorkflows/GameData/ME/No_FB/Trial.csv'
 
 #Arrays of datatypes and number of data types to be streamed and handled
-DataTypesArray = ['Rigid Body']
+DataTypesArray = ['Rigid Body', 'Bone']
 
-NumDataTypesArray = [1]
+NumDataTypesArray = [1, 51]
 
 ValidRigidBodyNumbers = [325]
 
-GameData = ['BalancingPole']
+GameData = ['SmallBalancingPole', 'BalancingPole']
 
 # list of rigid body parts 
 BodyPartsIDs = ['Pelvis', 'Ab', 'Chest', 'Neck', 'Head', 'LShoulder', 'LUArm', 

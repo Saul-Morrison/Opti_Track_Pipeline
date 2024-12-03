@@ -105,8 +105,8 @@ class DataStreamer:
         columns_to_delete = []
         time_column = []
         for i in range(simulatedDF.shape[1]):
-            if (headers_df.iloc[4,i] == 'Time'
-                or headers_df.iloc[4,i] == 'time'):
+            if (headers_df.iloc[3,i] == 'Time'
+                or headers_df.iloc[3,i] == 'time'):
                 time_column = simulatedDF.iloc[:,i]
             if headers_df.iloc[0, i] not in self.DataTypesArray:
                 columns_to_delete.append(i)

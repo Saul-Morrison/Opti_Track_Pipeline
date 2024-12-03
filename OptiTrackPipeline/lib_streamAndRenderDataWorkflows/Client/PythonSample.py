@@ -59,7 +59,6 @@ def receive_new_frame(data_dict):
 def receive_rigid_body_frame( rigid_body, shared_array, counter):
     # print( "Received frame for rigid body", rigid_body.id_num," ",rigid_body.pos," ",rigid_body.rot )
     # In this example: rigid body 1 is the only one that exists, and it's the one we care about
-    # print(shared_array.shape)
     ALL = True
     if ((rigid_body.id_num in ValidRigidBodyNumbers) or ALL):
         idx = 0

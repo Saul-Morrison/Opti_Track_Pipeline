@@ -6,6 +6,7 @@ var port := 4242
 var clients:= []
 var buffer_size := 7*4
 var frequency
+var aug := 1.0
 
 
 @onready var frame_rate = $CanvasLayer/RichTextLabel
@@ -31,6 +32,7 @@ func _update_pole_trans(pole: Node3D, packet: PackedByteArray) -> void:
 	for i in range(len(packet) / 4):
 		data = packet.decode_float(4*i)
 		floats.append(data)
+		
 
 	var quaternion = Quaternion(floats[4], floats[5], floats[3], floats[6]).normalized()
 	_augment_pole_angle(pole, quaternion)
@@ -40,17 +42,17 @@ func _augment_pole_angle(pole: Node3D, quaternion: Quaternion)->void:
 	var rotations = quaternion.get_euler()
 	var x = rotations.x
 	if x > 0:
-		x = x + 3.2 * (x**0.7) * exp(-7.3*x)
+		x = x + aug * (x**0.7) * exp(-7.3*x)
 	else:
 		x = -1 * x
-		x = x + 3.2 * (x**0.7) * exp(-7.3*x)
+		x = x + aug * (x**0.7) * exp(-7.3*x)
 		x = x * -1
 	var z = rotations.z
 	if z > 0:
-		z = z + 3.2 * z * exp(-7.3*z)
+		z = z + aug * z * exp(-7.3*z)
 	else:
 		z = -1 * z
-		z = z + 3.2 * z * exp(-7.3*z)
+		z = z + aug * z * exp(-7.3*z)
 		z = z * -1
 	pole.rotation.x = x
 	pole.rotation.z = z
@@ -58,7 +60,7 @@ func _augment_pole_angle(pole: Node3D, quaternion: Quaternion)->void:
 
 func _alert_pole_angle(pole: Node3D)->void:
 	
-	if (pole.rotation.x >= 0.15 or pole.rotation.x <= -0.15 or pole.rotation.z >= 0.15 or pole.rotation.z <= -0.15):
+	if (pole.rotation.x >= 0.35 or pole.rotation.x <= -0.35 or pole.rotation.z >= 0.35 or pole.rotation.z <= -0.35):
 		_set_background(world_environment.environment, Color(1, 0, 0))
 	else:
 		_set_background(world_environment.environment, Color(1, 1, 1))
